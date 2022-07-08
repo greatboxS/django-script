@@ -42,6 +42,7 @@ if [ $USE_DOCKER -eq 1 ]
 then
 	echo "Using docker to create new application"
 	sudo docker compose run web django-admin startapp $APP_NAME
+	sudo chown -R $USER:$USER $APP_NAME
 
 else
 	python manage.py startapp $APP_NAME
