@@ -1,0 +1,27 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: /home/pi/django/projects/_web_name_
+    links:
+      - "db:db"
+    command: bash -c "python manage.py migrate && 
+                      python manage.py runserver 0.0.0.0:8989"
+    volumes:
+      - .:/code
+    ports:
+      - "8989:8989"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
