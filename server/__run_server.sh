@@ -1,13 +1,18 @@
 #!bin/bash
 export USE_DOCKER=1
 export PORT_NUMBER=
+export BUILD_ENABLE=0
 
-
-while getopts "hdp:" opt; do
+while getopts "hdbp:" opt; do
     case $opt in
 		d) 
 			echo "Disable docker"
 			USE_DOCKER=0
+		;;
+
+		b)
+			echo "Enable docker compose build"
+			BUILD_ENABLE=1
 		;;
 
 		p) 
@@ -17,8 +22,9 @@ while getopts "hdp:" opt; do
 
 		h)
 			echo "Options:"
-			echo "Listen on port:            -p <port number>"
+			echo "Listen on port:            -p <port number> without docker mode"
 			echo "Using docker:              -d"
+			echo "Docker compose build:      -b"
 			exit;
 		;;
 	esac
@@ -26,8 +32,12 @@ done
 
 if [ $USE_DOCKER -eq 1 ]
 then
-	echo "Docker compose build"
-	docker compose build
+
+	if [ $BUILD_ENABLE -eq 1 ]
+	then
+		echo "Docker compose build"
+		docker compose build
+	fi
 	echo "Docker compose up"
 	docker compose up
 
