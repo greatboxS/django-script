@@ -1,42 +1,22 @@
+date:           07/2022 - Danang city VietNam
+author:         greatboxs
+descriptions:   Script for working with: Django (oauth2) - docker - postgresSQL
+                This work helpful for a django (api-oauth) project can quickly deploy
+                and run without any complicated configuration via docker.
 
-Change build path before create new project
-_web_name_ (no needs to change)
-docker-compose.yml
-  web:
-    build: home/pi/django/projects
+1. Requirements:
+    Docker
+    python3
+    pip3
 
-Example: Create project webapi with output directory is ../projects
+2. How to create a project:
 
-bash create_project.sh -n webapi -p ../projects/
+Cmd: bash create_project.sh -n webapi -p ../projects/
+Des: Create aproject name webapi and store it in ../projects/ directory
+     This creation used docker compose.
 
-Run server with docker
-bash run_server.sh -d
+3. How to run project:
 
-posgres db configuration:
-
-setting.py
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
-    }
-}
-
-// Clear docker unused file
-docker system prune
-
-// Install dependencies:
-
-sudo apt-get install docker-compose-plugin
-
-sudo apt-get install libpq-dev python-dev
-
-sudo apt-get install build-dep python-psycopg2
-
-// Install in virtual enviroment
-pip install psycopg2-binary 
+Cmd: sh __run_server.sh -b
+Des: -b used to build the docker image, the server is running in port 8989
+     to change to new port, use -p <port number> option.
