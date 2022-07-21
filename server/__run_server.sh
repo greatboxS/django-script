@@ -36,7 +36,7 @@ then
 	if [ $BUILD_ENABLE -eq 1 ]
 	then
 		echo "Docker compose build"
-		docker compose build
+		sudo docker compose build
 	fi
 	echo "Docker compose up"
 	docker compose up

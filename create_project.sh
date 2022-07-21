@@ -5,6 +5,7 @@ export RUN_SERVER=0
 export USE_DOCKER=1
 export PROJECT_ROOT=
 export USE_VENV=1
+export SETTING_PATH=`pwd`/settings
 
 while getopts "n:p:v:ehrd" opt; do
     case $opt in
@@ -94,18 +95,14 @@ then
 	source $PROJECT_ROOT/$VIRTUAL_ENV/bin/activate
 fi
 
-# install django
-echo "Install Django"
-python -m pip install Django
-
-echo "Install psycopg2-binary"
-python -m pip install psycopg2-binary
-
 echo "Sync script files"
 cp db/* $PROJECT_ROOT
 cp env/* $PROJECT_ROOT
 cp env/.env $PROJECT_ROOT
 cp server/* $PROJECT_ROOT
+
+echo "Install pip requirement packages"
+pip install -r $PROJECT_ROOT/requirements.txt
 
 if [ $USE_DOCKER == 1 ]
 then
@@ -122,10 +119,16 @@ then
 	# sed -i "s/\[_root_\]/\[${BUILD_ROOT}\]/g" docker-compose.yml
 	sed -i "s/_web_name_/$PROJECT_NAME/g" docker-compose.yml
 
-	echo "Create new Django project"
 	sudo docker compose run web django-admin startproject $PROJECT_NAME .
+	echo "Created new Django project"
 
 	sudo chown -R $USER:$USER *
+
+	cp $SETTING_PATH/settings.py $PROJECT_NAME/ -f
+	echo "Copied default $SETTING_PATH/settings.py file to project folder"
+
+	sed -i "s/{project_name}/$PROJECT_NAME/g" $PROJECT_NAME/settings.py
+	echo "Replaced project name in default settings file"
 
 	if [ $RUN_SERVER == 1 ]
 	then
